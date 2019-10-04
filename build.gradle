@@ -1,3 +1,6 @@
+import org.gitian.javacard.build.InstallTask
+import org.gitian.javacard.build.PingTask
+
 apply plugin: 'javacard'
 
 group 'org.gitian.javacard'
@@ -64,7 +67,8 @@ task wrapper(type: Wrapper) {
   gradleVersion = '4.7'
 }
 
-task install (type: org.gitian.javacard.build.InstallTask)
+task install (type: InstallTask)
+task ping (type: PingTask)
 
 if (testTarget == 'card') {
   tasks.install.dependsOn(convertJavacard)
@@ -85,6 +89,7 @@ afterEvaluate {
   def jvmArgs = ["-Dim.status.keycard.test.target=${testTarget}", "-Dim.status.keycard.test.pairing=${pairingPass}"]
 
   if (testTarget == 'simulator') {
+    //noinspection GroovyAssignabilityCheck
     jvmArgs.push('-noverify')
   }
 
