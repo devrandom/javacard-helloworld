@@ -5,10 +5,8 @@ import org.bouncycastle.util.encoders.Hex;
 import java.util.Arrays;
 
 public class Identifiers {
-  public static final byte[] PACKAGE_AID = Hex.decode("A0000008040001");
-//  public static final byte[] PACKAGE_AID =    Hex.decode("0F00BA00000001");
-  public static final byte[] HELLOWORLD_AID = Hex.decode("A000000804000101");
-//  public static final byte[] HELLOWORLD_AID = Hex.decode("0F00BA0000000101");
+  public static final byte[] PACKAGE_AID =    Hex.decode("0F00BA00000001");
+  public static final byte[] HELLOWORLD_AID = Hex.decode("0F00BA0000000101");
   public static final int DEFAULT_INSTANCE_IDX = 1;
 
   /**
