@@ -66,7 +66,6 @@ public class InstallTask extends DefaultTask {
       FileInputStream in = new FileInputStream("build/javacard/org/gitian/javacard/javacard/javacard.cap");
       loadPackage(cmdSet, in,
               (loadedBlock, blockCount) -> logger.info("Loaded block " + loadedBlock + "/" + blockCount));
-      logger.info("XXXX");
       logger.info("Installing the Keycard Applet");
       installApplet(cmdSet);
     } catch (IOException e) {
@@ -79,10 +78,8 @@ public class InstallTask extends DefaultTask {
   private void loadPackage(GlobalPlatformCommandSet cmdSet,
                            InputStream in, LoadCallback cb) throws IOException, APDUException {
     Logger logger = getLogger();
-    logger.info("1");
     cmdSet.installForLoad(Identifiers.PACKAGE_AID).checkOK();
 
-    logger.info("2");
     Load load = new Load(in);
 
     byte[] block;
@@ -90,7 +87,6 @@ public class InstallTask extends DefaultTask {
 
     while((block = load.nextDataBlock()) != null) {
       cmdSet.load(block, (load.getCount() - 1), load.hasMore()).checkOK();
-      logger.info("3");
       cb.blockLoaded(load.getCount(), steps);
     }
   }
