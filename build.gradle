@@ -1,7 +1,7 @@
 apply plugin: 'javacard'
 
-//group 'org.gitian.javacard'
-//version '1.0-SNAPSHOT'
+group 'org.gitian.javacard'
+version '1.0-SNAPSHOT'
 
 buildscript {
   repositories {
@@ -21,9 +21,11 @@ javacard {
 
   cap {
     aid = '0xA0:0x00:0x00:0x08:0x04:0x00:0x01'
+//    aid = '0x0F:0x00:0xBA:0x00:0x00:0x00:0x01'
     packageName = 'org.gitian.javacard'
     applet {
       aid = '0xA0:0x00:0x00:0x08:0x04:0x00:0x01:0x01'
+//      aid = '0x0F:0x00:0xBA:0x00:0x00:0x00:0x01:0x01'
       className = 'HelloWorldApplet'
     }
     version = '0.1'
@@ -64,11 +66,11 @@ task wrapper(type: Wrapper) {
   gradleVersion = '4.7'
 }
 
-//task install (type: org.gitian.keycard.build.InstallTask)
+task install (type: org.gitian.javacard.build.InstallTask)
 
 if (testTarget == 'card') {
-//  tasks.install.dependsOn(convertJavacard)
-//  tasks.test.dependsOn(install)
+  tasks.install.dependsOn(convertJavacard)
+  tasks.test.dependsOn(install)
 }
 
 compileJava {

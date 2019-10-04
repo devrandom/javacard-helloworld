@@ -8,4 +8,4 @@
 
 gradle.properties can include something like:
 
-    com.fidesmo.gradle.javacard.home=PATH_HERE/oracle_javacard_sdks/jc305u3_kit/
+    com.fidesmo.gradle.javacard.home=PATH_HERE/oracle_javacard_sdks/jc304_kit/
