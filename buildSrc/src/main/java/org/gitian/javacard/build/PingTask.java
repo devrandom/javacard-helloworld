@@ -1,82 +1,59 @@
 package org.gitian.javacard.build;
 
-import im.status.keycard.applet.ApplicationInfo;
-import im.status.keycard.applet.SecureChannelSession;
-import im.status.keycard.desktop.PCSCCardChannel;
-import im.status.keycard.io.APDUCommand;
-import im.status.keycard.io.APDUException;
-import im.status.keycard.io.APDUResponse;
-import im.status.keycard.io.CardChannel;
+import apdu4j.APDUBIBO;
+import apdu4j.CommandAPDU;
+import apdu4j.ResponseAPDU;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.GradleException;
 import org.gradle.api.logging.Logger;
 import org.gradle.api.tasks.TaskAction;
 
-import javax.smartcardio.Card;
 import javax.smartcardio.CardException;
-import javax.smartcardio.CardTerminal;
-import javax.smartcardio.TerminalFactory;
 import java.io.IOException;
 import java.util.Arrays;
 
+import static pro.javacard.gp.GPException.check;
+
 public class PingTask extends DefaultTask {
-  private CardChannel apduChannel;
-  private SecureChannelSession secureChannel = new SecureChannelSession();
-  private ApplicationInfo info;
+  private final Logger logger;
+  private APDUBIBO channel;
+  private Card card;
+
+  public PingTask() {
+    logger = getLogger();
+  }
 
   @TaskAction
   public void ping() {
-    Logger logger = getLogger();
-
-    TerminalFactory tf = TerminalFactory.getDefault();
-    CardTerminal cardTerminal = null;
-
+    card = new Card();
     try {
-      for (CardTerminal t : tf.terminals().list()) {
-        if (t.isCardPresent()) {
-          cardTerminal = t;
-          break;
-        }
-      }
-    } catch(CardException e) {
-      throw new GradleException("Error listing card terminals", e);
+      card.open();
+    } catch (CardException e) {
+      throw new GradleException("Error opening card", e);
     }
 
-    if (cardTerminal == null) {
-      throw new GradleException("No available PC/SC terminal");
-    }
-
-    Card apduCard;
-
-    try {
-      apduCard = cardTerminal.connect("*");
-    } catch(CardException e) {
-      throw new GradleException("Couldn't connect to the card", e);
-    }
-
-    logger.info("Connected to " + cardTerminal.getName());
-    apduChannel = new PCSCCardChannel(apduCard.getBasicChannel());
+    channel = card.getChannel();
 
     try {
       logger.info("Selecting the applet");
-      select().checkOK();
+      select();
+      logger.info("Ping");
       do_ping();
+      logger.info("Success");
     } catch (IOException e) {
       throw new GradleException("I/O error", e);
-    } catch (APDUException e) {
-      throw new GradleException(e.getMessage(), e);
+    } finally {
+      card.close();
     }
   }
 
-  private APDUResponse select() throws IOException {
-    APDUCommand selectApplet = new APDUCommand(0x00, 0xA4, 4, 0, Identifiers.getInstanceAID());
-    return apduChannel.send(selectApplet);
+  private void select() throws IOException {
+    card.select(Identifiers.HELLOWORLD_AID);
   }
 
-  private void do_ping() throws IOException, APDUException {
-    APDUCommand selectApplet = new APDUCommand(0x80, 0x00, 0, 0, new byte[0]);
-    APDUResponse result = apduChannel.send(selectApplet);
-    result.checkOK();
+  private void do_ping() throws IOException {
+    CommandAPDU cmd = new CommandAPDU(0x80, 0x00, 0, 0, new byte[0]);
+    ResponseAPDU result = check(channel.transmit(cmd));
     if (!Arrays.equals(result.getData(), "Hello".getBytes())) {
       throw new IOException("did not get Hello");
     }

@@ -1,8 +1,12 @@
+apply plugin: "java"
+
 repositories {
-  mavenCentral()
-  maven { url 'https://jitpack.io' }
+    mavenLocal()
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
-  compile 'com.github.status-im.status-keycard-java:desktop:4a69788'
+    compile 'com.github.martinpaljak:apdu4j-pcsc:19.05.08'
+    compile 'com.github.martinpaljak:globalplatformpro:19.06.16'
 }

@@ -5,24 +5,25 @@ import org.bouncycastle.util.encoders.Hex;
 import java.util.Arrays;
 
 public class Identifiers {
-  public static final byte[] PACKAGE_AID =    Hex.decode("0F00BA00000001");
-  public static final byte[] HELLOWORLD_AID = Hex.decode("0F00BA0000000101");
+  public static final String PACKAGE_AID_HEX = "0F00BA00000001";
+  public static final byte[] PACKAGE_AID =    Hex.decode(PACKAGE_AID_HEX);
+  public static final byte[] HELLOWORLD_AID = Hex.decode(PACKAGE_AID_HEX + "01");
   public static final int DEFAULT_INSTANCE_IDX = 1;
 
   /**
-   * Gets the instance AID of the default instance of the Keycard applet.
+   * Gets the instance AID of the default instance of the helloworld applet.
    *
-   * @return the instance AID of the Keycard applet
+   * @return the instance AID of the helloworld applet
    */
   public static byte[] getInstanceAID() {
     return getInstanceAID(DEFAULT_INSTANCE_IDX);
   }
 
   /**
-   * Gets the instance AID of the Keycard applet with the given index. Since multiple instances of the Keycard applet
+   * Gets the instance AID of the helloworld applet with the given index. Since multiple instances of the applet
    * could be installed in parallel, this method allows selecting a specific instance. The index is between 01 and ff
    *
-   * @return the instance AID of the Keycard applet
+   * @return the instance AID of the helloworld applet
    */
   public static byte[] getInstanceAID(int instanceIdx) {
     if (instanceIdx < 0x01 || instanceIdx > 0xff) {
