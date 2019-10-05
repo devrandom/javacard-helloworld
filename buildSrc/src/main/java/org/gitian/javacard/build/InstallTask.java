@@ -28,6 +28,7 @@ public class InstallTask extends DefaultTask {
     openCard();
 
     try {
+      card.openSecureChannel();
       CAPFile capFile = loadCap(logger);
       logger.info("Uninstall if exists");
       card.uninstall(capFile);
@@ -40,16 +41,19 @@ public class InstallTask extends DefaultTask {
       throw new GradleException("I/O error", e);
     } finally {
       card.close();
+      card = null;
     }
   }
 
   private void openCard() {
+    if (card != null) {
+      throw new GradleException("leaked card handle");
+    }
     card = new Card();
     try {
       card.open();
       logger.info("Opening a SecureChannel");
-      card.openSecureChannel();
-    } catch (CardException | IOException e) {
+    } catch (CardException e) {
       throw new GradleException("Error opening card", e);
     }
   }
