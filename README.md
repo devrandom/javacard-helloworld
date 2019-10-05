@@ -21,6 +21,11 @@ or you could use an environment variable (name?).
 1. Install to card with `./gradlew install -i`
 1. Ping applet with `./gradlew ping -i`
 
+You can also run unit tests, after cloning this repo in the parent directory:
+
+    (cd .. && git clone https://github.com/status-im/jcardsim.git jcardsim-status)
+    ./gradlew test -i
+
 ## Utilities
 
 Recommend building https://github.com/martinpaljak/GlobalPlatformPro and using

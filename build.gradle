@@ -38,7 +38,7 @@ repositories {
 }
 
 dependencies {
-    testCompile(files("../jcardsim/jcardsim-3.0.5-SNAPSHOT.jar"))
+    testCompile(files("../jcardsim-status/jcardsim-3.0.4-SNAPSHOT.jar"))
     testCompile("org.junit.jupiter:junit-jupiter-api:5.1.1")
     testRuntime("org.junit.jupiter:junit-jupiter-engine:5.1.1")
 }
